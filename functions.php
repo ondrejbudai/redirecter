@@ -1,7 +1,7 @@
 <?php
-define("get","_GET");
-define("post","_POST");
-define("session","_SESSION");
+define("get","get");
+define("post","post");
+define("session","session");
 function get_header($title) {
 $return = <<<HTXT
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -59,32 +59,68 @@ $return .= chr($rand + ($rand < 10 ? ord('0') : ($rand < 36 ? ord('a') - 10 : or
 return $return;
 }
 function var_exists($array,$names){
-  $return = 1;
   if(is_array($names)){
     for($i=0;$i<count($names);$i++){
-      if(!isset($$array[$names[$i]])){
-        $return = 0;
+      switch($array){
+        case "get":
+        if(!isset($_GET[$names[$i]])) return 0;
+        break;
+        case "post":
+        if(!isset($_POST[$names[$i]])) return 0;
+        break;
+        case "session":
+        if(!isset($_SESSION[$names[$i]])) return 0;
         break;
         }
       }
     }
-  else if(!isset($$array[$names])) $return = 0;
-  return $return;
+  else {
+    switch($array){
+      case "get":
+      if(!isset($_GET[$names])) return 0;
+      break;
+      case "post":
+      if(!isset($_POST[$names])) return 0;
+      break;
+      case "session":
+      if(!isset($_SESSION[$names])) return 0;
+      break;
+      }
+    };
+  return 1;
 }
 
 function var_notnull($array,$names) {
   if(!var_exists($array,$names)) return 0;
-  $return = 1;
   if(is_array($names)){
     for($i=0;$i<count($names);$i++){
-      if($$array[$names[$i]]==null){
-        $return = 0;
+      switch($array){
+        case "get":
+        if($_GET[$names[$i]]==null) return 0;
+        break;
+        case "post":
+        if($_POST[$names[$i]]==null) return 0;
+        break;
+        case "session":
+        if($_SESSION[$names[$i]]==null) return 0;
         break;
         }
       }
     }
-  else if($$array[$names]==null) $return = 0;
-  return $return;
+  else {
+    switch($array){
+      case "get":
+      if($_GET[$names]==null) return 0;
+      break;
+      case "post":
+      if($_POST[$names]==null) return 0;
+      break;
+      case "session":
+      if($_SESSION[$names]==null) return 0;
+      break;
+      }
+    };
+  return 1;
 }
 
 function get_error($e){

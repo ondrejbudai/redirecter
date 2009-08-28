@@ -17,7 +17,7 @@ global $step;
 $echo = "";
 switch($step){
   case 1:
-  session_destroy();
+  session_unset();
   $echo .= get_header("Instalace - krok $step.");
   $echo .= get_title("Kontrola systému");
   $exit = false;
@@ -31,7 +31,7 @@ switch($step){
     $exit = true;
     }   
   if(!$exit){
-    $_SESSION['step1']['control'] = true;
+    $_SESSION["step1"]["checked"] = true;
     $echo .= "
     <b><div class=\"green\">Systém byl úspěšně otestován pro Redirecter $version</div</b><br><br>
     <a href=\"?step=2\">Pokračovat</a>";
@@ -41,7 +41,7 @@ switch($step){
     }
   break;
   case 2:
-  if(!isset($_SESSION['step1']['control'])){
+  if(!isset($_SESSION["step1"]["checked"])){
     redirect("?step=1");
     exit;
     }
