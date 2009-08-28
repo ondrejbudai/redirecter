@@ -1,0 +1,53 @@
+body {
+font-family: Calibri, Verdana, Times New Roman;
+font-size: 14px;
+background-color: #e8e0c4;
+margin: 0;
+padding: 10;
+}
+
+h2 {
+font-size: 20px;
+font-weight: bold;
+}
+
+input {
+background-color: white;
+border: 1px solid black;
+font-family: Calibri, Verdana, Times New Roman;
+}
+
+table {
+border-right: 1px solid black;
+border-bottom: 1px solid black;
+font-size: 14px;
+}
+
+td {
+border-left: 1px solid black;
+border-top: 1px solid black;
+}
+
+.table-header {
+font-weight: bold;
+}
+
+.link {
+font-size: 16px;
+font-weight: bold;
+}
+
+.login {
+position: relative;
+left: 50%;
+margin-left: -150px;
+width: 300px;
+top: 50px;
+}
+.error {
+border: 2px solid red;
+color: red;
+}
+.green {
+color: green;
+}
