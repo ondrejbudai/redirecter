@@ -133,4 +133,10 @@ function post_to_session($data){
       }
     }
   }
+function check_install(){
+  if(isset($GLOBALS['instal'])){
+    redirect("install.php");
+    exit();
+    }
+  }
 ?>

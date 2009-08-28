@@ -11,40 +11,35 @@ else {
 if(!(isset($instal))){
   redirect("admin.php");
 }
+
 switch($step){
-  case 0:
-  redirect("?step=1");
-  break;
-  
   case 1:
   session_destroy();
-  $echo = get_header("Instalace - krok $step.");
-  $echo .= "<h2>Instalace - Krok 1. - Redirecter $version </h2><br><br>";
+  $echo .= get_header("Instalace - krok $step.");
+  $echo .= "<h2>Instalace - krok $step. - Redirecter $version</h2><br><br>";
   $exit = false;
   if((!(strnatcmp(substr(phpversion(),0,strpos(phpversion(), '-')),'4.2.0') >= 0 ) && ereg("^.+-.+$",phpversion())) xor (
       !(strnatcmp(phpversion(), '4.2.0') >= 0) && !(ereg("^.+-.+$",phpversion())))){
     $echo .= get_error(305);
     $exit = true;
-    }
-  
+    }    
   if(!is_writable("settings.php")){
     $echo .= get_error(304);
-    $echo .= "<br><br><a href=\"?step=1\">Znovu otestovat</a>";
     $exit = true;
-    }
+    }   
   if(!$exit){
     $_SESSION['step1']['control'] = true;
     $echo .= "
     <b><div class=\"green\">Systém byl úspěšně otestován pro Redirecter $version</div</b><br><br>
     <a href=\"?step=2\">Pokračovat</a>";
     }
+  else{
+    $echo .= "<br><br><a href=\"?step=1\">Znovu otestovat</a>";
+    }
   break;
-  
   case 2:
-  write_header("Instalace - krok 2.");
-  ?>
-<h2>Instalace - Krok 2. - Redirecter <?php echo($version);?></h2><br><br>
-<?php
+  $echo .= get_header("Instalace - krok $step.");
+  $echo .= "<h2>Instalace - krok $step. - Redirecter $version</h2><br><br>";
 if(check_ifdefine(get,"e")==1){
   echo(get_error("instal", $_GET['e']));
   }

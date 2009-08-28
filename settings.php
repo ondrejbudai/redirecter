@@ -2,5 +2,5 @@
 
 $instal = true;
 $version = "UNSTABLE";
-global $version;
+global $version, $instal;
 ?>

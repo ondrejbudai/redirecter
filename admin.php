@@ -2,6 +2,7 @@
 session_start();
 require_once("settings.php");
 require_once("functions.php");
+check_install();
 if(isset($_GET['action'])){
   switch($_GET['action']){
     case "login":
