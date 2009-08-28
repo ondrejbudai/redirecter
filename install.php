@@ -2,6 +2,7 @@
 session_start();
 require_once("settings.php");
 require_once("functions.php");
+require_once("install/functions.php");
 if(var_notnull(get,"step")){
   $step = $_GET['step'];
   }
@@ -10,13 +11,15 @@ else {
   }
 if(!(isset($instal))){
   redirect("admin.php");
+  exit;
 }
-
+global $step;
+$echo = "";
 switch($step){
   case 1:
   session_destroy();
   $echo .= get_header("Instalace - krok $step.");
-  $echo .= "<h2>Instalace - krok $step. - Redirecter $version</h2><br><br>";
+  $echo .= get_title("Kontrola systému");
   $exit = false;
   if((!(strnatcmp(substr(phpversion(),0,strpos(phpversion(), '-')),'4.2.0') >= 0 ) && ereg("^.+-.+$",phpversion())) xor (
       !(strnatcmp(phpversion(), '4.2.0') >= 0) && !(ereg("^.+-.+$",phpversion())))){
@@ -38,45 +41,49 @@ switch($step){
     }
   break;
   case 2:
+  if(!isset($_SESSION['step1']['control'])){
+    redirect("?step=1");
+    exit;
+    }
   $echo .= get_header("Instalace - krok $step.");
-  $echo .= "<h2>Instalace - krok $step. - Redirecter $version</h2><br><br>";
-if(check_ifdefine(get,"e")==1){
-  echo(get_error("instal", $_GET['e']));
-  }
-if(check_ifdefine(session,"filled")==1){
-$user = $_SESSION['user'];
-$pass = $_SESSION['pass'];
-$server = $_SESSION['server'];
-$db = $_SESSION['db'];
-$prefix = $_SESSION['prefix'];
-$port = $_SESSION['port'];
-}
-else{
-$user = "";
-$pass = "";
-$server = "localhost";
-$db = "";
-$prefix = "redirecter_";
-$port = "3306";
-}
-?>
+  $echo .= get_title("Nastavení MySQL databáze");
+  if(var_notnull(get,"e")){
+    $echo .= get_error($_GET['e']);
+    }
+  if(var_notnull(session,"filled")){
+    $user   = $_SESSION['user'];
+    $pass   = $_SESSION['pass'];
+    $server = $_SESSION['server'];
+    $db     = $_SESSION['db'];
+    $prefix = $_SESSION['prefix'];
+    $port   = $_SESSION['port'];
+    }
+  else{
+    $user   = "";
+    $pass   = "";
+    $server = "localhost";
+    $db     = "";
+    $prefix = "redirecter_";
+    $port   = "3306";
+    }
+  $echo .= <<<HTXT
 <form action="?step=3" method="post">
 <b>Zadejte prosím údaje pro přístup do databáze MySQL:</b><br><br>
 Uživatelské jméno:<br>
-<input type="text" name="user" value="<?php echo($user);?>"><br><br>
+<input type="text" name="user" value="$user"><br><br>
 Heslo:<br>
-<input type="password" name="pass" value="<?php echo($pass);?>"><br><br>
+<input type="password" name="pass" value="$pass"><br><br>
 Server:<br>
-<input type="text" name="server" value="<?php echo($server);?>"><br><br>
+<input type="text" name="server" value="$server"><br><br>
 Databáze:<br>
-<input type="text" name="db" value="<?php echo($db);?>"><br><br>
+<input type="text" name="db" value="$db"><br><br>
 Prefix:<br>
-<input type="text" name="prefix" value="<?php echo($prefix);?>"><br><br>
+<input type="text" name="prefix" value="$prefix"><br><br>
 Port:<br>
-<input type="text" name="port" value="<?php echo($port);?>"><br><br>
+<input type="text" name="port" value="$port"><br><br>
 <input type="submit" value="Odeslat">
 </form>
-  <?php
+HTXT;
   break;
   
   case 3:
