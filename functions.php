@@ -53,7 +53,7 @@ $count = 16;
 $chars = 36;
 $return = "";
 for ($i=0; $i < $count; $i++) {
-$rand = rand(0, $chars - 1);
+$rand = mt_rand(0, $chars - 1);
 $return .= chr($rand + ($rand < 10 ? ord('0') : ($rand < 36 ? ord('a') - 10 : ord('A') - 36)));
 }
 return $return;
