@@ -17,8 +17,8 @@ function install_get_header() {
   "Nastavení MySQL databáze",
   "Nastavení údajů o administrátorovi.",
   "Instalace dokončena");
-  $echo = get_header("Instalace - Krok $GLOBAL['step'].");
-  $echo .= get_title($subtitle[$GLOBALS['step']-1]);
+  $echo = get_header("Instalace - Krok {$GLOBALS["step"]}.");
+  $echo .= install_get_title($subtitle[$GLOBALS['step']-1]);
   $echo .= get_error();
   return $echo;
   }
