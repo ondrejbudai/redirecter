@@ -18,8 +18,7 @@ $echo = "";
 switch($step){
   case 1:
   session_unset();
-  $echo .= get_header("Instalace - krok $step.");
-  $echo .= install_get_title("Kontrola systému");
+  $echo .= install_get_header();
   $exit = false;
   if((!(strnatcmp(substr(phpversion(),0,strpos(phpversion(), '-')),'4.2.0') >= 0 ) && ereg("^.+-.+$",phpversion())) xor (
       !(strnatcmp(phpversion(), '4.2.0') >= 0) && !(ereg("^.+-.+$",phpversion())))){
@@ -42,8 +41,7 @@ switch($step){
   break;
   case 2:
   install_check_status();
-  $echo .= get_header("Instalace - krok $step.");
-  $echo .= install_get_title("Nastavení MySQL databáze");
+  
   if(isset($_SESSION["filled"])){
     $user   = $_SESSION['user'];
     $pass   = $_SESSION['pass'];
@@ -60,6 +58,7 @@ switch($step){
     $prefix = "redirecter_";
     $port   = "3306";
     }
+  $echo .= install_get_header();
   $echo .= <<<HTXT
 <form action="?step=3" method="post">
 <b>Zadejte prosím údaje pro přístup do databáze MySQL:</b><br><br>
@@ -85,7 +84,7 @@ HTXT;
   && !isset($_SESSION["step3"]["checked"])){
     $_SESSION['step2']['checked'] = true;
     }
-  install_check_status();
+  $echo .= install_check_status();
   if(!isset($_SESSION["step3"]["checked"])){
     post_to_session(array("user","pass","server","db","port","prefix"));
     $port = ":{$_POST["port"]}";
@@ -103,11 +102,7 @@ HTXT;
     }
     $_SESSION["step3"]["checked"] = true;
   }
-  $echo .= get_header("Instalace - Krok $step.");
-  $echo .= install_get_title("Nastavení údajů o administrátorovi");
-  if(var_notnull(get,"e")){
-    $echo .= get_error("instal", $_GET['e']);
-  }
+  $echo .= install_get_header();
   $echo .= <<<HTXT
 <form method="post" action="?step=4">
 E-mail:<br>
@@ -120,13 +115,8 @@ HTXT;
   break;
   case 4:
   install_check_status();
-  if (check_ifdefine(post,array("mail","pass"))==0){
+  if (!var_notnull(post,array("mail","pass"))){
     redirect("?step=3&e=1");
-    exit;
-    }
-  if (check_ifdefine(session,array("user","pass","server","db","port"))==0 
-      || check_isset(session,"prefix")==0){
-    redirect("?step=1");
     exit;
     }
   $server = $_SESSION['server'] .":".$_SESSION['port'];
@@ -160,8 +150,11 @@ HTXT;
   $settings = str_replace("*MAIL*",$_POST['mail'],$settings);
   fwrite($file_settings,$settings);
   fclose($file_settings);
-  redirect("admin.php");
-  
+  $echo .= install_get_header();
+  $echo .= <<<HTXT
+<div class="green">Instalace byla úspěšně dokončena.<br>
+Pokračujte přihlášením do <a href="admin.php">administrace.</a></div>
+HTXT;
   break;
   }
 $echo .= get_footer();

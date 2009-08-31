@@ -123,7 +123,9 @@ function var_notnull($array,$names) {
   return 1;
 }
 
-function get_error($e){
+function get_error(){
+  if(!isset($_GET['e']))return null;
+  $e = $_GET['e'];
   $error = "<div class=\"error\"><b>Chyba při vykonávání skriptu:</b><br>";
   switch($e){
     //INSTALLATION ERRORS:
