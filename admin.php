@@ -25,7 +25,7 @@ if(isset($_GET['action'])){
     case "home":
     
       if($_SESSION['pass']==$password){
-        write_header("Administrace");
+        echo get_header("Administrace");
         ?>
 <h2>ADMINISTRACE - Redirecter <?php echo($version);?></h2><br><br>
 
@@ -47,7 +47,7 @@ if(isset($_GET['action'])){
     case "edit-entries":
     
       if($_SESSION['pass']==$password){
-        write_header("Upravit záznamy");
+        echo get_header("Upravit záznamy");
         ?>
 <h2>Upravit záznamy</h2>
 <table cellspacing="0" cellpadding="2">
@@ -85,7 +85,7 @@ if(isset($_GET['action'])){
       if($_SESSION['pass']==$password){
         if(isset($_GET['id']) && !($_GET['id']=="")){
           $id = $_GET['id'];
-          write_header("Upravit záznam \"".$id."\"");
+          echo get_header("Upravit záznam \"".$id."\"");
           connect();
           $query = mysql_query("SELECT * FROM `".$sql['prefix']."redirecter` WHERE `id`='".$id."'");
           $count = mysql_num_rows($query);
@@ -186,7 +186,7 @@ echo(strip_tags($id));
           $count = mysql_fetch_array($query);
           mysql_close();
           if($count['count']==1){
-            write_header("Smazat záznam \"".$_GET['id']."\"");
+            echo get_header("Smazat záznam \"".$_GET['id']."\"");
             ?>
 <h2>Smazat záznam</h2><br><br>
 <strong>Opravdu chcete smazat záznam "<?php echo($_GET['id']);?>"?<br>
@@ -254,7 +254,7 @@ $_SESSION['token'] = $rand;
     case "new-entry":
     
       if($_SESSION['pass'] == $password){
-        write_header("Vytvořit nový záznam");
+        echo get_header("Vytvořit nový záznam");
         ?>
 <h2>Vytvořit nový záznam</h2><br><br>
 <form action="?action=new-entry-do" method="post">
@@ -323,13 +323,13 @@ $_SESSION['token'] = $rand;
     break;
     
     default:
-      write_header("Login");
+      echo get_header("Login");
       write_login();
     break;
     }
   }
 else {
-  write_header("Login");
+  echo get_header("Login");
   write_login();
   }
 ?>
