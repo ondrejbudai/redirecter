@@ -1,5 +1,5 @@
 <?php
 $instal = true;
-$version = "UNSTABLE";
+$version = "0.1 BETA";
 global $version, $instal;
 ?>
