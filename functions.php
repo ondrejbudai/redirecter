@@ -146,6 +146,10 @@ function get_error(){
     case 305:
     $error .= "Vámi používaná verze PHP (" . phpversion() . ") není podporovaná!<br>
               Upgradujte prosím Vaši instalaci PHP na minimální verzi 4.2.0 (doporučená verze je 5.2.x nebo 5.3.x) !";
+    break;
+    case 399:
+    $error .= install_get_error();
+    break;
     }
   $error .= "</div><br>";
   return $error;

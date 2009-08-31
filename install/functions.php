@@ -22,4 +22,10 @@ function install_get_header() {
   $echo .= get_error();
   return $echo;
   }
+function install_get_error(){
+  $error = array("Váš systém neprošel testováním kompatibility!",
+  "Nezadali jste všechny povinné údaje!",
+  null,);
+  return $error[$GLOBALS['step']-1];
+  }
 ?>

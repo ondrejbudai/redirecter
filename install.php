@@ -84,7 +84,7 @@ HTXT;
   && !isset($_SESSION["step3"]["checked"])){
     $_SESSION['step2']['checked'] = true;
     }
-  $echo .= install_check_status();
+  install_check_status();
   if(!isset($_SESSION["step3"]["checked"])){
     post_to_session(array("user","pass","server","db","port","prefix"));
     $port = ":{$_POST["port"]}";
