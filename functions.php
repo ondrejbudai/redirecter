@@ -151,14 +151,14 @@ function get_error($e){
 
 function get_mysql_error() {
 $error = "";
-if(check_ifdefine(session,"mysql_error")==1){
+if(var_notnull(session,"mysql_error")){
   $error = "<br>MySQL hlásí:\"".$_SESSION['mysql_error']."\"";
   }
 return $error;
 }
 
 function post_to_session($data){
-  if(check_isset(post,$data)){
+  if(var_exists(post,$data)){
     if(!(is_array($data))){
       $_SESSION[$data] = $_POST[$data];
       }

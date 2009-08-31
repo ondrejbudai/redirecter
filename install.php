@@ -19,7 +19,7 @@ switch($step){
   case 1:
   session_unset();
   $echo .= get_header("Instalace - krok $step.");
-  $echo .= get_title("Kontrola systému");
+  $echo .= install_get_title("Kontrola systému");
   $exit = false;
   if((!(strnatcmp(substr(phpversion(),0,strpos(phpversion(), '-')),'4.2.0') >= 0 ) && ereg("^.+-.+$",phpversion())) xor (
       !(strnatcmp(phpversion(), '4.2.0') >= 0) && !(ereg("^.+-.+$",phpversion())))){
@@ -41,16 +41,10 @@ switch($step){
     }
   break;
   case 2:
-  if(!isset($_SESSION["step1"]["checked"])){
-    redirect("?step=1");
-    exit;
-    }
+  install_check_status();
   $echo .= get_header("Instalace - krok $step.");
-  $echo .= get_title("Nastavení MySQL databáze");
-  if(var_notnull(get,"e")){
-    $echo .= get_error($_GET['e']);
-    }
-  if(var_notnull(session,"filled")){
+  $echo .= install_get_title("Nastavení MySQL databáze");
+  if(isset($_SESSION["filled"])){
     $user   = $_SESSION['user'];
     $pass   = $_SESSION['pass'];
     $server = $_SESSION['server'];
@@ -87,41 +81,34 @@ HTXT;
   break;
   
   case 3:
-  
-  if((check_ifdefine(post,array("user","pass","server","db","port"))==0 || check_isset(post,"prefix")==0)
-      && check_ifdefine(session,"db_tested")==0){
-    redirect("?step=2&e=1");
-    exit;
+  if(var_notnull(post,array("user","server","db","port")) && var_exists(post,array("pass","prefix"))
+  && !isset($_SESSION["step3"]["checked"])){
+    $_SESSION['step2']['checked'] = true;
     }
-  if(check_ifdefine(session,"db_tested")==0){
+  install_check_status();
+  if(!isset($_SESSION["step3"]["checked"])){
     post_to_session(array("user","pass","server","db","port","prefix"));
-    $port = ":".$_POST['port'];
-    $status = mysql_connect($_POST['server'].$port,$_POST['user'],$_POST['pass']);
-    if($status == false){
-      $_SESSION['mysql_error'] = mysql_error();
-      
-      $_SESSION['filled'] = true; 
-      redirect("?step=2&e=2");
+    $port = ":{$_POST["port"]}";
+    if(!mysql_connect($_POST["server"].$port,$_POST["user"],$_POST["pass"])){
+      $_SESSION["mysql_error"] = mysql_error();  
+      $_SESSION["filled"] = true; 
+      redirect("?step=2&e=302");
       exit;
     }
-    $status = mysql_select_db($_POST['db']);
-    if($status == false){
-      $_SESSION['mysql_error'] = mysql_error();
-      $_SESSION['filled'] = true; 
-      redirect("?step=2&e=3");
+    if(!mysql_select_db($_POST["db"])){
+      $_SESSION["mysql_error"] = mysql_error();
+      $_SESSION["filled"] = true; 
+      redirect("?step=2&e=303");
       exit;
     }
-    $_SESSION['db_tested'] = true;
+    $_SESSION["step3"]["checked"] = true;
   }
-  write_header("Instalace - Krok 3.");
-  
-  ?>
-<h2>Instalace - Krok 3. - Redirecter <?php echo($version);?></h2><br><br>
-  <?php
-  if(check_ifdefine(get,"e")==1){
-    echo(get_error("instal", $_GET['e']));
+  $echo .= get_header("Instalace - Krok $step.");
+  $echo .= install_get_title("Nastavení údajů o administrátorovi");
+  if(var_notnull(get,"e")){
+    $echo .= get_error("instal", $_GET['e']);
   }
-  ?>
+  $echo .= <<<HTXT
 <form method="post" action="?step=4">
 E-mail:<br>
 <input type="text" name="mail" value="@"><br>
@@ -129,9 +116,10 @@ Heslo:<br>
 <input type="password" name="pass"><br><br>
 <input type="submit" value="Odeslat">
 </form>
-  <?php
+HTXT;
   break;
   case 4:
+  install_check_status();
   if (check_ifdefine(post,array("mail","pass"))==0){
     redirect("?step=3&e=1");
     exit;
