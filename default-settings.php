@@ -29,7 +29,7 @@ $mail = "*MAIL*";
 
 /** CORE SETTINGS - DO NOT EDIT!!! **/
 
-$version = "UNSTABLE";
+$version = "0.1.1 BETA";
 
 global $version, $sql;
 ?>
