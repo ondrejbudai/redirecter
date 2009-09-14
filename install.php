@@ -28,7 +28,7 @@ switch($step){
   if(!is_writable("settings.php")){
     $echo .= get_error(304);
     $exit = true;
-    }   
+    }
   if(!$exit){
     $_SESSION["step1"]["checked"] = true;
     $echo .= "
